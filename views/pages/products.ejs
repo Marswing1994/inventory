@@ -1,0 +1,66 @@
+<%- include('../partials/head.ejs') %>
+
+<body>
+<%- include('../partials/menu.ejs') %>
+
+<img src="/images/products.png" alt="Thread N Things Products Page" style="width: 100%">
+
+<div class="d-flex flex-wrap flex-column flex-sm-column flex-md-row flex-lg-row">
+
+  <%- include('../partials/productmodal.ejs') %>
+
+    <% data.forEach((product)=>{ %> 
+
+        <div class="row row-cols-1 row-cols-md-3 g-4" style="padding: 30px;">
+            <div class="col">
+              <div class="card" style="width: 300px">
+        
+                <img src="<%= product.imgFolderPath %>" class="card-img-top" alt="<%= product.product_name %>" style="width: 200px; height: 200px; margin-left: auto; margin-right: auto;">   <!--FIGURE OUT HOW TO FOR EACH THE IMAGES-->
+                <div class="card-body">
+        
+                  <h5 class="card-title"><%= product.product_name %></h5>
+                  <p class="category" style="font-style: italic; color: #7d7f7c"><%= product.category %></p>
+        
+                  <p class="card-text">
+                    <%= product.tag_line %>
+                  </p>
+
+                  <br>
+        
+                  <button type="button" class="product btn btn-warning" data-toggle="modal" data-target="#productModal" id = <%= product.id %>>
+                      Check Availability
+                  </button> 
+        
+                </div>
+              </div>
+            </div>
+        </div> 
+        
+    <% }) %>
+        
+</div>
+
+<script>
+    let dataset = '<%- JSON.stringify(data) %>';
+    let supplies = JSON.parse(dataset);
+    let allProductButtons = document.querySelectorAll(".product");
+    
+    allProductButtons.forEach((productButton)=> {
+     productButton.addEventListener('click', function(event) {
+         const button = event.target;
+         id = button.id;
+         let product_info_ref = document.querySelector("#product_info");
+
+         let selectedProduct = supplies.find(x => x.id == id);
+
+         product_info_ref.textContent = "Unit Price: $" + selectedProduct.price + "\r\n \r\nIn Stock: " + selectedProduct.quantity_stock + "\r\n \r\nSupplier: " + selectedProduct.supplier;
+         let product_modal_title_ref = document.querySelector("#product_title");
+         product_modal_title_ref.textContent = selectedProduct.product_name;
+     })
+    }); 
+ </script>
+
+
+
+<%- include('../partials/footer.ejs') %>
+</body>
